@@ -1,0 +1,1 @@
+*esse arquivo tá aqui só pro git não ignorar essa pasta. quando for desenvolver de fato, delete esse arquivo.*
