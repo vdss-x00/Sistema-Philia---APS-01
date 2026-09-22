@@ -1,0 +1,32 @@
+{
+  "name": "sistema-philia",
+  "version": "1.0.0",
+  "description": "Entrega da APS 01 da Desenvolvimento Back-End do UniSenai PR",
+  "keywords": [
+    "Back-End",
+    "API",
+    "Crowdfunding",
+    "UniSenai",
+    "PR"
+  ],
+  "homepage": "https://github.com/vdss-x00/Sistema-Philia---APS-01#readme",
+  "bugs": {
+    "url": "https://github.com/vdss-x00/Sistema-Philia---APS-01/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vdss-x00/Sistema-Philia---APS-01.git"
+  },
+  "license": "ISC",
+  "author": "Vitor Santos",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
