@@ -32,7 +32,7 @@ async function create(campaign: {
   active: boolean;
 }) {
   const { data, error } = await supabase
-    .from("categories")
+    .from("campaigns")
     .insert(campaign)
     .select()
     .single();

@@ -2,6 +2,7 @@ import express from "express";
 import supabase from "./config/supabase.js";
 import { randomUUID } from "node:crypto";
 import Campaign from "./models/Campaign.js";
+import Organizer from "./models/Organizer.js";
 import CampaignRoutes from "./routes/CampaignRoutes.js";
 import OrganizerRoutes from "./routes/OrganizerRoutes.js";
 
