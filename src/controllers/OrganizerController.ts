@@ -1,1 +1,1 @@
-{/*Código vai aqui*/}
+import type { Request, Response } from "express";
