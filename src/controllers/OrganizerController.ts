@@ -48,7 +48,7 @@ async function create(req:Request, res:Response) {
         console.log("Erro ao criar organizador: ", error);
 
         res.status(500).json({
-            message: "Erro ao criar categoria.",
+            message: "Erro ao criar organizador.",
         });
     }
 }

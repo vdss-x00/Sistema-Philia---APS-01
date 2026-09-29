@@ -1,5 +1,5 @@
 create table organizers (
-    id uuid primary key,
+    id uuid primary key default gen_random_uuid(),
     name varchar(100) not null,
     description varchar(255),
     icon varchar(10),
@@ -8,7 +8,7 @@ create table organizers (
 );
 
 create table campaigns (
-    id uuid primary key,
+    id uuid primary key default gen_random_uuid(),
     organizer_id uuid not null,
     title varchar(150) not null,
     description varchar(500),
