@@ -24,14 +24,32 @@
 
 ## Contexto
 
+Esse projeto tem como objetivo servir de introdução a APIs RESTful para os alunos, abordando conceitos como métodos HTTP, funções assíncronas, controladores, roteamento, variáveis de ambiente, e entre outros.
+
+Para esse projeto em específico, os alunos escolheram criar uma API RESTful que simula uma plataforma de angariação de fundos, semelhante a outras plataformas como GoFundMe ou Vakinha, chamada `Philia`, nome que vem do grego antigo e significa "amizade" ou "afeição".
+
+Com esta API, é possível criar, buscar, atualizar e deletar organizadores e campanhas do banco de dados.
+
 [Voltar ao Índice](#índice)
 
 ## Tecnologias Usadas 
+
+- Node.js
+- Typescript
+- Supabase
+- Express.js
+- Git
 
 
 [Voltar ao Índice](#índice)
 ## Entidades e Relacionamentos
 
+Há duas entidades principais envolvidas na API:
+
+- `Campanha`: Entidade que representa as campanhas de angariação de fundos da plataforma, seja para as mais variadas causas;
+- `Organizador`: Entidade que representa o criador das campanahas;
+
+Um organizador pode ter várias campanhas, mas uma campanha pertence a apenas um organizador. (1:N)
 
 [Voltar ao Índice](#índice)
 ## Estrutura do Projeto
@@ -39,6 +57,7 @@
 
 [Voltar ao Índice](#índice)
 ## Configuração e Execução
+>Pré-requisito: Ter um projeto ativo no Supabase
 
 
 [Voltar ao Índice](#índice)
