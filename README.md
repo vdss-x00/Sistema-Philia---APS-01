@@ -143,8 +143,8 @@ Há duas tabelas usadas no projeto:
 |  `GET` |   `/campaigns`  | Lista todas as campanhas registradas |
 |  `GET` | `/campaigns/:id`| Lista uma campanha específica pelo seu id|
 | `POST` |`/campaigns`     | Registra uma campanha nova |
-| `PUT`  | `/campaigns/:id`| Atualiza uma campanha registrada |
-| `DELETE`| `/campaigns/:id`| Remove uma campanha |
+| `PUT`  | `/campaigns/:id`| Atualiza uma campanha registrada (selecionada pelo id) |
+| `DELETE`| `/campaigns/:id`| Remove uma campanha (selecionada pelo id) |
 |  `GET` |   `/organizers`  | Lista todas os organizadores registrados |
 |  `GET` | `/organizers/:id`| Lista um organizador específico pelo seu id|
 | `POST` |`/organizers`     | Registra um organizador novo |
