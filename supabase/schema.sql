@@ -4,7 +4,7 @@ create table organizers (
     description varchar(255),
     icon varchar(10),
     active boolean not null default true,
-    
+    created_at timestamp with time zone default now()
 );
 
 create table campaigns (
