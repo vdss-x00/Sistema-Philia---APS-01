@@ -14,7 +14,7 @@
  - [Variáveis de Ambiente](#variáveis-de-ambiente)
  - [Tabelas do Banco de Dados](#tabelas-do-banco-de-dados)
  - [Endpoints](#endpoints)
- - [Exemplo de Requisição](#exemplo-de-requisição)
+ - [Exemplos de Requisições](#exemplos-de-requisições)
 
 
 ## Integrantes do Grupo
@@ -35,9 +35,10 @@ Com esta API, é possível criar, buscar, atualizar e deletar organizadores e ca
 ## Tecnologias Usadas 
 
 - Node.js
-- Typescript
+- TypeScript
 - Supabase
 - Express.js
+- Postman
 - Git
 
 
@@ -54,25 +55,179 @@ Um organizador pode ter várias campanhas, mas uma campanha pertence a apenas um
 [Voltar ao Índice](#índice)
 ## Estrutura do Projeto
 
+```text
+src/
+├── config/
+├── controllers/
+├── models/
+├── routes/
+├── app.ts
+└── server.ts
+supabase/
+├── schema.sql
+```
+
 
 [Voltar ao Índice](#índice)
 ## Configuração e Execução
 >Pré-requisito: Ter um projeto ativo no Supabase
 
+Antes de rodar `git clone`, vá ao editor SQL do seu projeto e copie e cole o código presente no arquivo `schema.sql`, clique em salvar e depois em `run`, para executar o código e criar as tabelas necessárias.
+
+Após isso, agora sim clone o repositório:
+```bash
+git clone https://github.com/vdss-x00/Sistema-Philia---APS-01.git
+```
+Depois rode:
+```bash
+cd Sistema-Philia---APS-01
+```
+```bash
+code .
+```
+
+Agora, estando com o projeto aberto, crie o arquivo .env que será usado para a API. Substitua os valores da chave pública e da chave anônima pelos valores reais do seu projeto.
+
+
+Por último, rode os seguintes comandos para instalar as dependências necessárias do Node e para iniciar o servidor:
+```bash
+npm install
+```
+```bash
+npm run dev
+```
+
 
 [Voltar ao Índice](#índice)
 ## Variáveis de Ambiente
 
+A única variável de ambiente necessária é o arquivo .env, que será criado após seguir os passos do item anterior.
 
 [Voltar ao Índice](#índice)
 ## Tabelas do Banco de Dados
+
+Há duas tabelas usadas no projeto:
+
+### organizers
+| Coluna | Descrição |
+| ------ | --------- |
+| id     | Chave primária gerada aleatoriamente <br />e automaticamente pela função randomUUID(). |
+| name   | Nome do organizador. |
+| description | Descrição do organizador. |
+| icon | Atributo VARCHAR que simula imagem de perfil do organizador. |
+| active | Atributo booleano que indica se o organizador <br /> está ativo ou não. |
+| created_at | Atributo `timestamp` gerado automaticamente pelo Supabase. |
+
+
+### campaigns
+| Coluna | Descrição |
+| ------ | --------- |
+| id     | Chave primária gerada aleatoriamente <br />e automaticamente pela função randomUUID(). |
+| organizer_id | Chave estrangeira da tabela `organizers`, <br /> associando as duas tabelas. |
+| title | Nome da Campanha. |
+| description | Descrição da Campanha. |
+| image | Atributo VARCHAR que simula a imagem de capa <br /> da campanha. |
+| goal_amount | Atributo numérico que simula a meta <br/> de doações de uma campanha. |
+| active | Atributo booleano que indica se a campanha <br /> está ativa ou não. |
+| created_at |  Atributo `timestamp` gerado automaticamente pelo Supabase. |
+| updated_at |  Atributo `timestamp` gerado automaticamente pelo Supabase. |
+
+
 
 
 [Voltar ao Índice](#índice)
 ## Endpoints
 
+| Método |  Rota  | Descrição |
+| :------ | :------: | :--------- |
+|  `GET` |   `/campaigns`  | Lista todas as campanhas registradas |
+|  `GET` | `/campaigns/:id`| Lista uma campanha específica pelo seu id|
+| `POST` |`/campaigns`     | Registra uma campanha nova |
+| `PUT`  | `/campaigns/:id`| Atualiza uma campanha registrada |
+| `DELETE`| `/campaigns/:id`| Remove uma campanha |
+|  `GET` |   `/organizers`  | Lista todas os organizadores registrados |
+|  `GET` | `/organizers/:id`| Lista um organizador específico pelo seu id|
+| `POST` |`/organizers`     | Registra um organizador novo |
+| `PATCH`  | `/organizers/:id`| Atualiza parte do registro de um organizador |
+| `PATCH`| `/organizers/:id/disable`| Muda o status da coluna `active` de `true` para `false`|
 
 [Voltar ao Índice](#índice)
-## Exemplo de Requisição
+## Exemplos de Requisições
+
+Antes de começar, é necessário lembrar que as duas tabelas estão vazias. Por isso, abra o Postman e efetue uma operação POST no endpoint `/organizers`.
+
+>Importante lembrar que a API só aceita um objeto JSON por vez, e não um array.
+Exemplo:
+```text
+{
+    "name": "Jéssica",
+    "description": "Organizadora de eventos de caridade para crianças com câncer.",
+    "active": true
+}
+``` 
+
+Deve resultar em algo assim:
+```text
+{
+    "id": "00315c15-b3c0-4317-a2b8-54d67226156b",
+    "name": "Jéssica",
+    "description": "Organizadora de eventos de caridade para crianças com câncer.",
+    "icon": null,
+    "active": true,
+    "created_at": "2026-09-29T02:42:40.344568+00:00"
+}
+```
+>Os campos que não foram incluídos no input são gerados automaticamente pelo Supabase.
+
+Após criar seu primeiro organizador, crie uma campanha com POST no endpoint `/campaigns`, lembrando-se de copiar a id gerada no último exemplo:
+```text
+{
+    "organizer_id": "00315c15-b3c0-4317-a2b8-54d67226156b",
+    "title": "Ajude as crianças do nosso hospital!",
+    "description": "Nos ajude a conseguir medicamentos!",
+    "goal_amount": 6500.00,
+    "active": false
+}
+```
+
+Resultado:
+```text
+{
+    "id": "a874b695-eb26-40fd-b4ea-4b0790c52dd2",
+    "organizer_id": "00315c15-b3c0-4317-a2b8-54d67226156b",
+    "title": "Ajude as crianças do nosso hospital!",
+    "description": "Nos ajude a conseguir medicamentos!",
+    "image": null,
+    "goal_amount": 6500,
+    "active": false,
+    "created_at": "2026-09-29T02:59:16.820711+00:00",
+    "updated_at": "2026-09-29T02:59:16.820711+00:00"
+}
+```
+Agora, para mudar um ou mais atributos, efetue uma operação PUT no endpoint `/campaigns/:id`, trocando o ":id" pelo id gerado pelo Supabase:
+>Essa API permite efetuar operações PUT da mesma maneira que uma operação PATCH, especificando apenas o atributo que deseja modificar.
+```text
+{
+    "active": true
+}
+```
+
+Resultado:
+```text
+{
+    "id": "a874b695-eb26-40fd-b4ea-4b0790c52dd2",
+    "organizer_id": "00315c15-b3c0-4317-a2b8-54d67226156b",
+    "title": "Ajude as crianças do nosso hospital!",
+    "description": "Nos ajude a conseguir medicamentos!",
+    "image": null,
+    "goal_amount": 6500,
+    "active": true,
+    "created_at": "2026-09-29T02:59:16.820711+00:00",
+    "updated_at": "2026-09-29T02:59:16.820711+00:00"
+}
+```
+
+Para completar o ciclo de CRUD, efetue uma operação DELETE no endpoint `/campaigns/:id` para remover a campanha que você registrou.
+
 
 [Voltar ao Índice](#índice)
