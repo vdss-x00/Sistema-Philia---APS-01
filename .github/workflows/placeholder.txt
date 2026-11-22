@@ -1,0 +1,2 @@
+Esse arquivo tá aqui pra não acionar o GitHub Actions antes da hora.
+Quando terminar o projeto, crie o "ci.yml" nessa pasta e delete esse arquivo.
