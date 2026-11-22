@@ -1,93 +1,177 @@
-import supabase from "../config/supabase.js";
+import { ValidationError } from "../errors/ValidationError.js";
 
-async function findAll() {
-  const { data, error } = await supabase.from("campaigns").select("*");
 
-  if (error) {
-    throw error;
+export class Campaign {
+  private id: string | undefined;
+  private organizer_id: string;
+  private title: string;
+  private description: string | undefined;
+  private image: string | undefined;
+  private goal_amount: number;
+  private active: boolean;
+  private created_at: Date | undefined;
+  private updated_at: Date | undefined;
+
+  constructor(
+    organizer_id: string,
+    title: string,
+    goal_amount: number,
+    description?: string,
+    image?: string,
+  ) {
+    this.id = undefined;
+    this.organizer_id = "";
+    this.title = "";
+    this.description = description;
+    this.image = image;
+    this.goal_amount = 0;
+    this.active = true;
+    this.created_at = undefined;
+    this.updated_at = undefined;
+
+    this.changeOrganizer(organizer_id);
+    this.rename(title);
+    this.changeGoalAmount(goal_amount);
+    if (image !== undefined) this.changeImage(image);
+    if (description !== undefined) this.changeDescription(description);
   }
 
-  return data;
-}
+  static restore(
+    id: string,
+    organizer_id: string,
+    title: string,
+    goal_amount: number,
+    active: boolean,
+    description?: string,
+    image?: string,
+    created_at?: Date,
+    updated_at?: Date,
+  ): Campaign {
+    const campaign = new Campaign(
+      organizer_id,
+      title,
+      goal_amount,
+      description,
+      image,
+    );
 
-async function findById(id: string) {
-  const { data, error } = await supabase
-    .from("campaigns")
-    .select("*")
-    .eq("id", id)
-    .single();
+    campaign.id = id;
+    campaign.active = active;
+    campaign.created_at = created_at;
+    campaign.updated_at = updated_at;
 
-  if (error) {
-    throw error;
+    return campaign;
   }
 
-  return data;
-}
-
-async function create(campaign: {
-  name: string;
-  description: string;
-  icon: string;
-  goal_amount: number;
-  active: boolean;
-}) {
-  const { data, error } = await supabase
-    .from("campaigns")
-    .insert(campaign)
-    .select()
-    .single();
-
-  if (error) {
-    throw error;
+  getId(): string | undefined {
+    return this.id;
   }
 
-  return data;
-}
-
-async function update(
-  id: string,
-  campaign: {
-    name: string;
-    description: string;
-    icon: string;
-    goal_amount: number;
-    active: boolean;
-  },
-) {
-  const { data, error } = await supabase
-    .from("campaigns")
-    .update(campaign)
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) {
-    throw error;
+  getOrganizerId(): string {
+    return this.organizer_id;
   }
 
-  return data;
-}
-
-async function remove(id: string) {
-  const { data, error } = await supabase
-    .from("campaigns")
-    .delete()
-    .eq("id", id)
-    .select()
-    .single();
-
-  if (error) {
-    throw error;
+  getTitle(): string {
+    return this.title;
   }
 
-  return data;
+  getDescription(): string | undefined {
+    return this.description;
+  }
+
+  getImage(): string | undefined {
+    return this.image;
+  }
+
+  getGoalAmount(): number {
+    return this.goal_amount;
+  }
+
+  isActive(): boolean {
+    return this.active;
+  }
+
+  getCreatedAt(): Date | undefined {
+    return this.created_at;
+  }
+
+  getUpdatedAt(): Date | undefined {
+    return this.updated_at;
+  }
+
+  changeOrganizer(organizer_id: string): void {
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if (typeof organizer_id !== "string" || !uuidRegex.test(organizer_id.trim())) {
+      throw new ValidationError(
+        "O identificador do organizador deve ser um UUID válido.",
+      );
+    }
+
+    this.organizer_id = organizer_id.trim();
+  }
+
+  rename(title: string): void {
+    if (typeof title !== "string" || title.trim().length === 0) {
+      throw new ValidationError("O título da campanha é obrigatório.");
+    }
+
+    if (title.trim().length > 150) {
+      throw new ValidationError(
+        "O título deve ter no máximo 150 caracteres.",
+      );
+    }
+
+    this.title = title.trim();
+  }
+
+  changeDescription(description: string): void {
+    if (description.length > 500) {
+      throw new ValidationError(
+        "A descrição deve ter no máximo 500 caracteres.",
+      );
+    }
+
+    this.description = description;
+  }
+
+  changeImage(image: string): void {
+    if (image.length > 255) {
+      throw new ValidationError(
+        "O caminho da imagem deve ter no máximo 255 caracteres.",
+      );
+    }
+
+    this.image = image;
+  }
+
+  changeGoalAmount(goal_amount: number): void {
+    if (
+      typeof goal_amount !== "number" ||
+      !Number.isFinite(goal_amount) ||
+      goal_amount < 0 ||
+      !Number.isInteger(goal_amount * 100)
+    ) {
+      throw new ValidationError(
+        "A meta da campanha deve ser um valor monetário válido e maior ou igual a zero, com no máximo duas casas decimais.",
+      );
+    }
+
+    if (goal_amount >= 1_000_000_000_000) {
+      throw new ValidationError(
+        "A meta da campanha excede o limite permitido.",
+      );
+    }
+
+    this.goal_amount = goal_amount;
+  }
+
+  activate(): void {
+    this.active = true;
+  }
+
+  deactivate(): void {
+    this.active = false;
+  }
 }
-
-
-export default {
-  findAll,
-  findById,
-  create,
-  update,
-  remove,
-};

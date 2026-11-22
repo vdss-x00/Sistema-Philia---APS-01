@@ -4,7 +4,8 @@ create table organizers (
     description varchar(255),
     icon varchar(10),
     active boolean not null default true,
-    created_at timestamp with time zone default now()
+    created_at timestamp with time zone default now(),
+    is_deleted boolean not null default false
 );
 
 create table campaigns (
@@ -17,10 +18,42 @@ create table campaigns (
     active boolean not null default true,
     created_at timestamp with time zone default now(),
     updated_at timestamp with time zone default now(),
+    is_deleted boolean not null default false,
 
     constraint fk_campaigns_organizer
         foreign key (organizer_id)
         references organizers(id)
+);
+
+create table contributors (
+    id uuid primary key default gen_random_uuid(),
+    campaign_id uuid not null,
+    name varchar(100) not null,
+    description varchar(255),
+    icon varchar(10),
+    active boolean not null,
+    created_at timestamp with time zone default now(),
+    is_deleted boolean not null default false
+);
+
+create table campaign_contributors (
+    campaign_id uuid not null,
+    contributor_id uuid not null,
+    donation_amount numeric(12, 2) not null,
+
+    created_at timestamptz default now(),
+
+    primary key (campaign_id, contributor_id),
+
+    constraint fk_campaign_contributors_campaign
+        foreign key (campaign_id)
+        references campaigns(id)
+        on delete cascade,
+
+    constraint fk_campaign_contributors_contributor
+        foreign key (contributor_id)
+        references contributors(id)
+        on delete cascade
 );
 
 create index idx_campaigns_organizer_id
