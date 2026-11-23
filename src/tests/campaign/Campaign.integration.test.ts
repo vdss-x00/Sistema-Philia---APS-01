@@ -140,11 +140,11 @@ describe("Campaign - Testes de integração", () => {
   it("deve remover uma campanha existente", async () => {
     const { id } = await createCampaign();
 
-    const response = await request(app).delete(`/campaigns/${id}`);
+    const response = await request(app).patch(`/campaigns/${id}/disable`);
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      message: "Campanha removida com sucesso!",
+      message: "Campanha desativada com sucesso!",
     });
   }, 20_000);
 

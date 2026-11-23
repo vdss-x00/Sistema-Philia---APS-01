@@ -103,10 +103,10 @@ async function update(organizer: Organizer) {
     return data;
 }
 
-async function remove(id: string) {
+async function disable(id: string) {
     const { data, error } = await supabase
         .from("organizers")
-        .delete()
+        .update({ active: false, is_deleted: true })
         .eq("id", id)
         .select()
         .maybeSingle();
@@ -128,5 +128,5 @@ export default {
     searchByKeyword,
     create,
     update,
-    remove,
+    disable
 };

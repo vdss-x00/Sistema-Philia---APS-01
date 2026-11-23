@@ -154,7 +154,7 @@ async function disable(req: Request<{ id: string }>, res: Response) {
     const organizer = await OrganizerRepository.findById(id);
     organizer.deactivate();
 
-    const disabledOrganizer = await OrganizerRepository.update(organizer);
+    const disabledOrganizer = await OrganizerRepository.disable(id);
 
     return res.status(200).json(disabledOrganizer);
   } catch (error) {
