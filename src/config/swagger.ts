@@ -28,6 +28,14 @@ const options: swaggerJSDoc.Options = {
         name: "Organizers",
         description: "Gerenciamento de organizadores",
       },
+      {
+        name: "Contributors",
+        description: "Gerenciamento de contribuidores",
+      },
+      {
+        name: "CampaignContributors",
+        description: "Gerenciamento das contribuições associadas às campanhas",
+      },
     ],
     components: {
       schemas: {
@@ -112,6 +120,10 @@ const options: swaggerJSDoc.Options = {
         UpdateCampaign: {
           type: "object",
           properties: {
+            organizer_id: {
+              type: "string",
+              format: "uuid",
+            },
             title: {
               type: "string",
               maxLength: 150,
@@ -214,6 +226,165 @@ const options: swaggerJSDoc.Options = {
             active: {
               type: "boolean",
               example: true,
+            },
+          },
+        },
+        Contributor: {
+          type: "object",
+          properties: {
+            id: {
+              type: "string",
+              format: "uuid",
+              readOnly: true,
+            },
+            name: {
+              type: "string",
+              maxLength: 100,
+              example: "Maria da Silva",
+            },
+            description: {
+              type: "string",
+              maxLength: 255,
+              example: "Contribuidora da campanha",
+            },
+            icon: {
+              type: "string",
+              maxLength: 10,
+              example: "❤️",
+            },
+            donation_amount: {
+              type: "number",
+              minimum: 0,
+              maximum: 9999999999.99,
+              example: 25,
+            },
+            active: {
+              type: "boolean",
+              example: true,
+            },
+            created_at: {
+              type: "string",
+              format: "date-time",
+              readOnly: true,
+            },
+            is_deleted: {
+              type: "boolean",
+              readOnly: true,
+              example: false,
+            },
+          },
+        },
+        CreateContributor: {
+          type: "object",
+          required: ["name", "donation_amount"],
+          properties: {
+            name: {
+              type: "string",
+              maxLength: 100,
+              example: "Maria da Silva",
+            },
+            description: {
+              type: "string",
+              maxLength: 255,
+              example: "Contribuidora da campanha",
+            },
+            icon: {
+              type: "string",
+              maxLength: 10,
+              example: "❤️",
+            },
+            donation_amount: {
+              type: "number",
+              minimum: 0,
+              maximum: 9999999999.99,
+              example: 25,
+            },
+          },
+        },
+        UpdateContributor: {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              maxLength: 100,
+              example: "Maria da Silva",
+            },
+            description: {
+              type: "string",
+              maxLength: 255,
+              example: "Descrição atualizada",
+            },
+            icon: {
+              type: "string",
+              maxLength: 10,
+              example: "❤️",
+            },
+            donation_amount: {
+              type: "number",
+              minimum: 0,
+              maximum: 9999999999.99,
+              example: 50,
+            },
+            active: {
+              type: "boolean",
+              example: true,
+            },
+          },
+        },
+        CampaignContributor: {
+          type: "object",
+          required: ["campaign_id", "contributor_id", "donation_amount"],
+          properties: {
+            campaign_id: {
+              type: "string",
+              format: "uuid",
+            },
+            contributor_id: {
+              type: "string",
+              format: "uuid",
+            },
+            donation_amount: {
+              type: "number",
+              minimum: 0,
+              maximum: 9999999999.99,
+              example: 25,
+            },
+            created_at: {
+              type: "string",
+              format: "date-time",
+              readOnly: true,
+            },
+          },
+        },
+        CreateCampaignContributor: {
+          type: "object",
+          required: ["campaign_id", "contributor_id", "donation_amount"],
+          properties: {
+            campaign_id: {
+              type: "string",
+              format: "uuid",
+            },
+            contributor_id: {
+              type: "string",
+              format: "uuid",
+            },
+            donation_amount: {
+              type: "number",
+              minimum: 0,
+              maximum: 9999999999.99,
+              example: 25,
+            },
+          },
+        },
+        UpdateCampaignContributor: {
+          type: "object",
+          required: ["donation_amount"],
+          properties: {
+            donation_amount: {
+              type: "number",
+              minimum: 0,
+              maximum: 9999999999.99,
+              example: 50,
             },
           },
         },

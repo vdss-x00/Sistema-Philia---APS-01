@@ -13,7 +13,7 @@ const router = Router();
  *     description: Retorna todas as contribuições de campanha cadastradas.
  *     responses:
  *       200:
- *         description: Lista de categorias retornadas com sucesso.
+ *         description: Lista de contribuições retornada com sucesso.
  *         content:
  *           application/json:
  *             schema:
@@ -31,19 +31,27 @@ router.get("/", CampaignContributorController.getAll);
 
 /**
  * @openapi
- * /campaign-contributors/{id}:
+ * /campaign-contributors/{campaign_id}/{contributor_id}:
  *   get:
  *     tags:
  *       - CampaignContributors
- *     summary: Buscar contribuidor de campanha por ID
- *     description: Retorna uma contribuição de campanha específica pelo seu identificador.
+ *     summary: Buscar contribuição por campanha e contribuidor
+ *     description: Retorna a contribuição identificada pela campanha e pelo contribuidor.
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: campaign_id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da contribuição.
+ *           format: uuid
+ *         description: ID da campanha.
+ *       - in: path
+ *         name: contributor_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID do contribuidor.
  *     responses:
  *       200:
  *         description: Contribuição encontrada com sucesso.
@@ -56,7 +64,10 @@ router.get("/", CampaignContributorController.getAll);
  *       500:
  *         description: Erro interno ao buscar contribuição.
  */
-router.get("/:id", CampaignContributorController.getById);
+router.get(
+  "/:campaign_id/:contributor_id",
+  CampaignContributorController.getById,
+);
 
 /**
  * @openapi
@@ -71,7 +82,7 @@ router.get("/:id", CampaignContributorController.getById);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CreateContributor'
+ *             $ref: '#/components/schemas/CreateCampaignContributor'
  *     responses:
  *       201:
  *         description: Contribuição criada com sucesso.
@@ -88,7 +99,7 @@ router.post("/", CampaignContributorController.create);
 
 /**
  * @openapi
- * /campaign-contributors/{id}:
+ * /campaign-contributors/{campaign_id}/{contributor_id}:
  *   patch:
  *     tags:
  *       - CampaignContributors
@@ -96,11 +107,19 @@ router.post("/", CampaignContributorController.create);
  *     description: Atualiza os dados de uma contribuição de campanha existente.
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: campaign_id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da contribuição  .
+ *           format: uuid
+ *         description: ID da campanha.
+ *       - in: path
+ *         name: contributor_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID do contribuidor.
  *     requestBody:
  *       required: true
  *       content:
@@ -110,6 +129,10 @@ router.post("/", CampaignContributorController.create);
  *     responses:
  *       200:
  *         description: Contribuição atualizada com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CampaignContributor'
  *       400:
  *         description: Dados inválidos.
  *       404:
@@ -117,7 +140,10 @@ router.post("/", CampaignContributorController.create);
  *       500:
  *         description: Erro interno ao atualizar contribuição.
  */
-router.patch("/:id", CampaignContributorController.update);
+router.patch(
+  "/:campaign_id/:contributor_id",
+  CampaignContributorController.update,
+);
 
 
 export default router;

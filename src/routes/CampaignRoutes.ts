@@ -5,23 +5,23 @@ const router = Router();
 
 /**
  * @openapi
- * /categories:
+ * /campaigns:
  *   get:
  *     tags:
- *       - Categories
- *     summary: Listar todas as categorias
- *     description: Retorna todas as categorias cadastradas.
+ *       - Campaigns
+ *     summary: Listar todas as campanhas
+ *     description: Retorna todas as campanhas cadastradas.
  *     responses:
  *       200:
- *         description: Lista de categorias retornadas com sucesso.
+ *         description: Lista de campanhas retornada com sucesso.
  *         content:
  *           application/json:
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Category'
+ *                 $ref: '#/components/schemas/Campaign'
  *       500:
- *         description: Erro interno ao buscar categorias.
+ *         description: Erro interno ao buscar campanhas.
  *         content:
  *           application/json:
  *             schema:
@@ -31,116 +31,124 @@ router.get("/", CampaignController.getAll);
 
 /**
  * @openapi
- * /categories/{id}:
+ * /campaigns/{id}:
  *   get:
  *     tags:
- *       - Categories
- *     summary: Buscar categoria por ID
- *     description: Retorna uma categoria específica pelo seu identificador.
+ *       - Campaigns
+ *     summary: Buscar campanha por ID
+ *     description: Retorna uma campanha específica pelo seu identificador.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da categoria.
+ *         description: ID da campanha.
  *     responses:
  *       200:
- *         description: Categoria encontrada com sucesso.
+ *         description: Campanha encontrada com sucesso.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Category'
+ *               $ref: '#/components/schemas/Campaign'
  *       404:
- *         description: Categoria não encontrada.
+ *         description: Campanha não encontrada.
  *       500:
- *         description: Erro interno ao buscar categoria.
+ *         description: Erro interno ao buscar campanha.
  */
 router.get("/:id", CampaignController.getById);
 
 /**
  * @openapi
- * /categories:
+ * /campaigns:
  *   post:
  *     tags:
- *       - Categories
- *     summary: Criar uma categoria
- *     description: Cadastra uma nova categoria.
+ *       - Campaigns
+ *     summary: Criar uma campanha
+ *     description: Cadastra uma nova campanha.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CreateCategory'
+ *             $ref: '#/components/schemas/CreateCampaign'
  *     responses:
  *       201:
- *         description: Categoria criada com sucesso.
+ *         description: Campanha criada com sucesso.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Category'
+ *               $ref: '#/components/schemas/Campaign'
  *       400:
  *         description: Dados inválidos.
  *       500:
- *         description: Erro interno ao criar categoria.
+ *         description: Erro interno ao criar campanha.
  */
 router.post("/", CampaignController.create);
 
 /**
  * @openapi
- * /categories/{id}:
+ * /campaigns/{id}:
  *   put:
  *     tags:
- *       - Categories
- *     summary: Atualizar uma categoria
- *     description: Atualiza os dados de uma categoria existente.
+ *       - Campaigns
+ *     summary: Atualizar uma campanha
+ *     description: Atualiza os dados de uma campanha existente.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da categoria.
+ *         description: ID da campanha.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CreateCategory'
+ *             $ref: '#/components/schemas/UpdateCampaign'
  *     responses:
  *       200:
- *         description: Categoria atualizada com sucesso.
+ *         description: Campanha atualizada com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Campaign'
  *       400:
  *         description: Dados inválidos.
  *       404:
- *         description: Categoria não encontrada.
+ *         description: Campanha não encontrada.
  *       500:
- *         description: Erro interno ao atualizar categoria.
+ *         description: Erro interno ao atualizar campanha.
  */
 router.put("/:id", CampaignController.update);
 
 /**
  * @openapi
- * /categories/{id}:
+ * /campaigns/{id}:
  *   delete:
  *     tags:
- *       - Categories
- *     summary: Remover uma categoria
- *     description: Remove uma categoria pelo seu identificador.
+ *       - Campaigns
+ *     summary: Remover uma campanha
+ *     description: Remove uma campanha pelo seu identificador.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID da categoria.
+ *         description: ID da campanha.
  *     responses:
  *       200:
- *         description: Categoria removida com sucesso.
+ *         description: Campanha removida com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       404:
- *         description: Categoria não encontrada.
+ *         description: Campanha não encontrada.
  *       500:
- *         description: Erro interno ao remover categoria.
+ *         description: Erro interno ao remover campanha.
  */
 router.delete("/:id", CampaignController.remove);
 

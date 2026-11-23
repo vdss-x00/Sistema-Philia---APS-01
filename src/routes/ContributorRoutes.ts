@@ -10,10 +10,10 @@ const router = Router();
  *     tags:
  *       - Contributors
  *     summary: Listar todos os contribuidores
- *     description: Retorna todas as categorias cadastradas.
+ *     description: Retorna todos os contribuidores cadastrados.
  *     responses:
  *       200:
- *         description: Lista de categorias retornadas com sucesso.
+ *         description: Lista de contribuidores retornada com sucesso.
  *         content:
  *           application/json:
  *             schema:
@@ -106,10 +106,14 @@ router.post("/", ContributorController.create);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CreateContributor'
+ *             $ref: '#/components/schemas/UpdateContributor'
  *     responses:
  *       200:
  *         description: Contribuidor atualizado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Contributor'
  *       400:
  *         description: Dados inválidos.
  *       404:
@@ -137,6 +141,10 @@ router.patch("/:id", ContributorController.update);
  *     responses:
  *       200:
  *         description: Contribuidor desativado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Contributor'
  *       404:
  *         description: Contribuidor não encontrado.
  *       500:

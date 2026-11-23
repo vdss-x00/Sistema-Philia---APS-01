@@ -90,7 +90,7 @@ router.post("/", OrganizerController.create);
 /**
  * @openapi
  * /organizers/{id}:
- *   put:
+ *   patch:
  *     tags:
  *       - Organizers
  *     summary: Atualizar um organizador
@@ -107,10 +107,14 @@ router.post("/", OrganizerController.create);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CreateOrganizer'
+ *             $ref: '#/components/schemas/UpdateOrganizer'
  *     responses:
  *       200:
  *         description: Organizador atualizado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Organizer'
  *       400:
  *         description: Dados inválidos.
  *       404:
@@ -122,7 +126,7 @@ router.patch("/:id", OrganizerController.update);
 
 /**
  * @openapi
- * /organizers/{id}:
+ * /organizers/{id}/disable:
  *   patch:
  *     tags:
  *       - Organizers
@@ -138,6 +142,10 @@ router.patch("/:id", OrganizerController.update);
  *     responses:
  *       200:
  *         description: Organizador desativado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Organizer'
  *       404:
  *         description: Organizador não encontrado.
  *       500:
