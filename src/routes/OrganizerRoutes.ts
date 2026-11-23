@@ -118,7 +118,7 @@ router.post("/", OrganizerController.create);
  *       500:
  *         description: Erro interno ao atualizar organizador.
  */
-router.put("/:id", OrganizerController.update);
+router.patch("/:id", OrganizerController.update);
 
 /**
  * @openapi
@@ -143,6 +143,6 @@ router.put("/:id", OrganizerController.update);
  *       500:
  *         description: Erro interno ao desativar organizador.
  */
-router.patch("/:id", OrganizerController.disable);
+router.patch("/:id/disable", OrganizerController.disable);
 
 export default router;
