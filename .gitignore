@@ -1,5 +1,6 @@
 node_modules/
 .env
+/dist/
 /public/api-docs/*
 !/public/api-docs/swagger-ui-bundle.js
 !/public/api-docs/swagger-ui-standalone-preset.js
