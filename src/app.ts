@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
     res.redirect("/api-docs/");
 });
 
-app.get("/api-docs", (req, res) => {
+app.get(/^\/api-docs$/, (req, res) => {
     res.redirect(308, "/api-docs/");
 });
 
