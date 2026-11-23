@@ -1,4 +1,32 @@
+import { existsSync, readdirSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import swaggerJSDoc from "swagger-jsdoc";
+
+const routeDirectories = [
+  resolve(dirname(fileURLToPath(import.meta.url)), "../routes"),
+  resolve(process.cwd(), "src/routes"),
+  resolve(process.cwd(), "routes"),
+  resolve(process.cwd(), "dist/routes"),
+];
+
+const routesDirectory = routeDirectories.find(
+  (directory) =>
+    existsSync(directory) &&
+    readdirSync(directory).some((file) => /Routes\.(ts|js)$/.test(file)),
+);
+
+if (!routesDirectory) {
+  throw new Error("Não foi possível localizar os arquivos das rotas para o Swagger.");
+}
+
+const routeFiles = readdirSync(routesDirectory).filter((file) =>
+  /Routes\.(ts|js)$/.test(file),
+);
+const sourceRouteFiles = routeFiles.filter((file) => file.endsWith(".ts"));
+const apiFiles = (sourceRouteFiles.length > 0 ? sourceRouteFiles : routeFiles).map(
+  (file) => resolve(routesDirectory, file),
+);
 
 const options: swaggerJSDoc.Options = {
   definition: {
@@ -400,7 +428,7 @@ const options: swaggerJSDoc.Options = {
       },
     },
   },
-  apis: ["./src/routes/*.ts", "./dist/routes/*.js"],
+  apis: apiFiles,
 };
 
 const swaggerSpec = swaggerJSDoc(options);
