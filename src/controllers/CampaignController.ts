@@ -1,10 +1,13 @@
 import type { Request, Response } from "express";
-import Campaign from "../models/Campaign.js";
+import CampaignRepository from "../repositories/CampaignRepository.js";
+import { Campaign } from "../models/Campaign.js";
+import { ValidationError } from "../errors/ValidationError.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
 
 async function getAll(req: Request, res: Response) {
   try {
     try {
-      const campaigns = await Campaign.findAll();
+      const campaigns = await CampaignRepository.findAll();
 
       res.status(200).json(campaigns);
     } catch (error) {
@@ -14,7 +17,7 @@ async function getAll(req: Request, res: Response) {
         message: "Erro ao buscar campanhas.",
       });
     }
-  } catch (error) {}
+  } catch (error) { }
 }
 
 async function getById(req: Request<{ id: string }>, res: Response) {
@@ -26,34 +29,73 @@ async function getById(req: Request<{ id: string }>, res: Response) {
     });
   }
   try {
-    const campaign = await Campaign.findById(id);
+    const campaign = await CampaignRepository.findById(id);
 
-    res.status(200).json(campaign);
+    res.status(200).json({
+      id: campaign.getId(),
+      organizer_id: campaign.getOrganizerId(),
+      title: campaign.getTitle(),
+      description: campaign.getDescription(),
+      image: campaign.getImage(),
+      goal_amount: campaign.getGoalAmount(),
+      active: campaign.isActive(),
+      created_at: campaign.getCreatedAt(),
+      updated_at: campaign.getUpdatedAt(),
+    });
   } catch (error) {
     console.log("Erro ao buscar campanha: ", error);
 
-    res.status(404).json({
-      message: "Erro ao buscar campanha.",
+    if (error instanceof NotFoundError) {
+      res.status(404).json({
+        message: error.message,
+      });
+    }
+    return res.status(500).json({
+      message: "Erro interno ao buscar campanha.",
     });
   }
 }
 
 async function create(req: Request, res: Response) {
-  try {
-    const campaign = await Campaign.create(req.body);
+  const { organizer_id, title, goal_amount, description, image } = req.body;
 
-    res.status(201).json(campaign);
+  try {
+    const campaign = new Campaign(
+      organizer_id,
+      title,
+      goal_amount,
+      description,
+      image,
+    );
+
+    const createdCampaign = await CampaignRepository.create(campaign);
+
+    res.status(201).json(createdCampaign);
   } catch (error) {
     console.log("Erro ao criar campanha: ", error);
 
+    if (error instanceof ValidationError) {
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
     res.status(500).json({
-      message: "Erro ao criar campanha.",
+      message: "Erro interno ao criar campanha.",
     });
   }
 }
 
 async function update(req: Request<{ id: string }>, res: Response) {
   const { id } = req.params;
+  const {
+    organizer_id,
+    title,
+    goal_amount,
+    description,
+    image,
+    active,
+  } = req.body;
 
   if (!id) {
     return res.status(400).json({
@@ -62,14 +104,56 @@ async function update(req: Request<{ id: string }>, res: Response) {
   }
 
   try {
-    const campaign = await Campaign.update(id, req.body);
+    const campaign = await CampaignRepository.findById(id);
 
-    res.status(200).json(campaign);
+    if (organizer_id !== undefined) {
+      campaign.changeOrganizer(organizer_id);
+    }
+
+    if (title !== undefined) {
+      campaign.rename(title);
+    }
+
+    if (description !== undefined) {
+      campaign.changeDescription(description);
+    }
+
+    if (image !== undefined) {
+      campaign.changeImage(image);
+    }
+
+    if (goal_amount !== undefined) {
+      campaign.changeGoalAmount(goal_amount);
+    }
+
+    if (active === true) {
+      campaign.activate();
+    }
+
+    if (active === false) {
+      campaign.deactivate();
+    }
+
+    const updatedCampaign = await CampaignRepository.update(campaign);
+
+    res.status(200).json(updatedCampaign);
   } catch (error) {
     console.log("Erro ao atualizar campanha: ", error);
 
-    res.status(404).json({
-      message: "Campanha não encontrada.",
+    if (error instanceof ValidationError) {
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
+    if (error instanceof NotFoundError) {
+      res.status(404).json({
+        message: error.message,
+      });
+    }
+
+    res.status(500).json({
+      message: "Erro interno ao atualizar campanha.",
     });
   }
 }
@@ -84,7 +168,7 @@ async function remove(req: Request<{ id: string }>, res: Response) {
   }
 
   try {
-    const campaign = await Campaign.remove(id);
+    await CampaignRepository.remove(id);
 
     res.status(200).json({
       message: "Campanha removida com sucesso!",
@@ -92,12 +176,17 @@ async function remove(req: Request<{ id: string }>, res: Response) {
   } catch (error) {
     console.log("Erro ao remover campanha: ", error);
 
-    res.status(404).json({
-      message: "Campanha não encontrada.",
+    if (error instanceof NotFoundError) {
+      res.status(404).json({
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      message: "Erro interno ao remover campanha.",
     });
   }
 }
-
 
 
 export default {
