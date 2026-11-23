@@ -1,3 +1,9 @@
 node_modules/
 .env
-/public/api-docs/
+/public/api-docs/*
+!/public/api-docs/swagger-ui-bundle.js
+!/public/api-docs/swagger-ui-standalone-preset.js
+!/public/api-docs/swagger-ui.css
+!/public/api-docs/favicon-16x16.png
+!/public/api-docs/favicon-32x32.png
+!/public/api-docs/oauth2-redirect.html
