@@ -40,7 +40,10 @@ Com esta API, é possível criar, buscar, atualizar e deletar organizadores e ca
 - Express.js
 - Postman
 - Git
-
+- Swagger
+- Vitest
+- Supertest
+- Supabase (PostgreSQL)
 
 [Voltar ao Índice](#índice)
 ## Entidades e Relacionamentos

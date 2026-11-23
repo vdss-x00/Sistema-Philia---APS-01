@@ -21,7 +21,11 @@ app.get(/^\/api-docs$/, (req, res) => {
 app.use(
     "/api-docs",
     swaggerUi.serve,
-    swaggerUi.setup(swaggerSpec),
+    swaggerUi.setup(swaggerSpec, {
+        swaggerOptions: {
+            tryItOutEnabled: true,
+        },
+    }),
 );
 
 app.use("/campaigns", CampaignRoutes);
