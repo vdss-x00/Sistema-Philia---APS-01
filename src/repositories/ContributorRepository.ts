@@ -28,21 +28,29 @@ async function findById(id: string): Promise<Contributor> {
   }
 
   return Contributor.restore(
-      data.id,
-      data.name,
-      data.description,
-      data.icon,
-      data.active,
-      data.created_at,
-      data.is_deleted
-    );
+    data.id,
+    data.name,
+    data.active,
+    data.description ?? undefined,
+    data.icon ?? undefined,
+    data.created_at ? new Date(data.created_at) : undefined,
+    data.is_deleted,
+    Number(data.donation_amount),
+  );
 }
 
 
 async function create(contributor: Contributor) {
   const { data, error } = await supabase
     .from("contributors")
-    .insert(contributor)
+    .insert({
+      name: contributor.getName(),
+      description: contributor.getDescription(),
+      icon: contributor.getIcon(),
+      donation_amount: contributor.getDonationAmount(),
+      active: contributor.isActive(),
+      is_deleted: contributor.isDeleted(),
+    })
     .select()
     .maybeSingle();
 
@@ -70,6 +78,7 @@ async function update(contributor: Contributor) {
       name: contributor.getName(),
       description: contributor.getDescription(),
       icon: contributor.getIcon(),
+      donation_amount: contributor.getDonationAmount(),
       active: contributor.isActive(),
       is_deleted: contributor.isDeleted(),
     })
@@ -91,7 +100,7 @@ async function update(contributor: Contributor) {
 async function disable(id: string) {
   const { data, error } = await supabase
     .from("contributors")
-    .update({ is_deleted: true })
+    .update({ active: false, is_deleted: true })
     .eq("id", id)
     .select()
     .maybeSingle();

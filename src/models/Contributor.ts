@@ -9,12 +9,14 @@ export class Contributor {
   private active: boolean;
   private created_at: Date | undefined;
   private is_deleted: boolean;
+  private donation_amount: number;
 
   constructor(
     name: string,
     description?: string,
     icon?: string,
     is_deleted: boolean = false,
+    donation_amount: number = 0,
   ) {
     this.id = undefined;
     this.name = "";
@@ -23,7 +25,9 @@ export class Contributor {
     this.is_deleted = is_deleted;
     this.active = true;
     this.created_at = undefined;
+    this.donation_amount = 0;
     this.rename(name);
+    this.changeDonationAmount(donation_amount);
 
 
     if (description !== undefined) {
@@ -43,12 +47,14 @@ export class Contributor {
     icon?: string,
     created_at?: Date,
     is_deleted: boolean = false,
+    donation_amount: number = 0,
   ): Contributor {
     const contributor = new Contributor(
       name,
       description,
       icon,
-      is_deleted
+      is_deleted,
+      donation_amount,
     );
 
     contributor.id = id;
@@ -86,6 +92,26 @@ export class Contributor {
     return this.is_deleted;
   }
 
+  getDonationAmount(): number {
+    return this.donation_amount;
+  }
+
+  changeDonationAmount(amount: number): void {
+    if (
+      typeof amount !== "number" ||
+      !Number.isFinite(amount) ||
+      amount < 0 ||
+      Math.round(amount * 100) !== amount * 100 ||
+      amount >= 1_000_000_000_000
+    ) {
+      throw new ValidationError(
+        "O valor da contribuição deve ser válido e possuir no máximo duas casas decimais.",
+      );
+    }
+
+    this.donation_amount = amount;
+  }
+
   changeCampaign(campaign_id: string): void {
     const uuidRegex =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -102,7 +128,7 @@ export class Contributor {
 
   rename(name: string): void {
     if (typeof name !== "string" || name.trim().length === 0) {
-      throw new ValidationError("O nome do contribuinte é obrigatório.");
+      throw new ValidationError("O nome do contribuidor é obrigatório.");
     }
 
     if (name.trim().length > 100) {

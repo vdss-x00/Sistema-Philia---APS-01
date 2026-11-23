@@ -29,6 +29,7 @@ create table contributors (
     id uuid primary key default gen_random_uuid(),
     name varchar(100) not null,
     description varchar(255),
+    donation_amount numeric(12, 2) not null,
     icon varchar(10),
     active boolean not null,
     created_at timestamp with time zone default now(),

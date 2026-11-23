@@ -15,6 +15,7 @@ describe("Contributor - Testes de integração", () => {
       name,
       description: "Contribuidor criado pelo teste de integração",
       icon: "🏢",
+      donation_amount: 25,
     };
   }
 
@@ -95,6 +96,7 @@ describe("Contributor - Testes de integração", () => {
       name: `Contribuidor atualizado ${randomUUID()}`,
       description: "Descrição atualizada pelo teste",
       icon: "❤️",
+      donation_amount: 50,
       active: false,
     };
 

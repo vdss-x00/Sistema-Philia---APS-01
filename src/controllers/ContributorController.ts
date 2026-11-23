@@ -32,6 +32,7 @@ async function getById(req: Request<{ id: string }>, res: Response) {
       name: contributor.getName(),
       description: contributor.getDescription(),
       icon: contributor.getIcon(),
+      donation_amount: contributor.getDonationAmount(),
       active: contributor.isActive(),
       created_at: contributor.getCreatedAt(),
       is_deleted: contributor.isDeleted(),
@@ -52,10 +53,20 @@ async function getById(req: Request<{ id: string }>, res: Response) {
 }
 
 async function create(req: Request, res: Response) {
-  const { name, description, icon } = req.body;
+  const { name, description, icon, donation_amount } = req.body;
 
   try {
-    const contributor = new Contributor(name, description, icon);
+    if (typeof donation_amount !== "number") {
+      throw new ValidationError("O valor da contribuição deve ser informado.");
+    }
+
+    const contributor = new Contributor(
+      name,
+      description,
+      icon,
+      false,
+      donation_amount,
+    );
 
     const createdContributor = await ContributorRepository.create(contributor);
 
@@ -84,11 +95,12 @@ async function update(req: Request<{ id: string }>, res: Response) {
     });
   }
 
-  const { name, description, icon, active } = req.body;
+  const { name, description, icon, donation_amount, active } = req.body;
   const hasChanges =
     name !== undefined ||
     description !== undefined ||
     icon !== undefined ||
+    donation_amount !== undefined ||
     active !== undefined;
 
   if (!hasChanges) {
@@ -110,6 +122,10 @@ async function update(req: Request<{ id: string }>, res: Response) {
 
     if (icon !== undefined) {
       contributor.changeIcon(icon);
+    }
+
+    if (donation_amount !== undefined) {
+      contributor.changeDonationAmount(donation_amount);
     }
 
     if (active === true) {
@@ -152,11 +168,9 @@ async function disable(req: Request<{ id: string }>, res: Response) {
   }
 
   try {
-    await ContributorRepository.disable(id);
+    const disabledContributor = await ContributorRepository.disable(id);
 
-    return res.status(200).json({
-      message: "Contribuidor desativado com sucesso.",
-    });
+    return res.status(200).json(disabledContributor);
   } catch (error) {
     console.error("Erro ao desativar contribuidor:", error);
 

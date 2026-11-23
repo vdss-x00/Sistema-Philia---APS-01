@@ -89,7 +89,7 @@ router.post("/", ContributorController.create);
 /**
  * @openapi
  * /contributors/{id}:
- *   put:
+ *   patch:
  *     tags:
  *       - Contributors
  *     summary: Atualizar um contribuidor
@@ -117,12 +117,12 @@ router.post("/", ContributorController.create);
  *       500:
  *         description: Erro interno ao atualizar contribuidor.
  */
-router.put("/:id", ContributorController.update);
+router.patch("/:id", ContributorController.update);
 
 /**
  * @openapi
- * /contributors/{id}:
- *   delete:
+ * /contributors/{id}/disable:
+ *   patch:
  *     tags:
  *       - Contributors
  *     summary: Desativa um contribuidor
@@ -142,6 +142,6 @@ router.put("/:id", ContributorController.update);
  *       500:
  *         description: Erro interno ao desativar contribuidor.
  */
-router.patch("/:id", ContributorController.disable);
+router.patch("/:id/disable", ContributorController.disable);
 
 export default router;

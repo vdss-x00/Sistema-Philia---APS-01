@@ -5,7 +5,7 @@ import app from "../../app.js";
 import supabase from "../../config/supabase.js";
 
 describe("Campaign - Testes de integração", () => {
-  const testNames: string[] = [];
+  const testCampaignIds: string[] = [];
   let organizerId = "";
 
   beforeAll(async () => {
@@ -46,8 +46,6 @@ describe("Campaign - Testes de integração", () => {
   function makeCampaignData() {
     const title = `Teste integração ${randomUUID()}`;
 
-    testNames.push(title);
-
     return {
       organizer_id: organizerId,
       title,
@@ -62,6 +60,10 @@ describe("Campaign - Testes de integração", () => {
 
     const response = await request(app).post("/campaigns").send(data);
 
+    if (typeof response.body.id === "string") {
+      testCampaignIds.push(response.body.id);
+    }
+
     expect(response.status).toBe(201);
     expect(response.body.id).toEqual(expect.any(String));
 
@@ -72,16 +74,16 @@ describe("Campaign - Testes de integração", () => {
   }
 
   afterEach(async () => {
-    const names = testNames.slice(0);
-
-    if (names.length === 0) {
+    if (testCampaignIds.length === 0) {
       return;
     }
 
     const { error } = await supabase
       .from("campaigns")
       .delete()
-      .in("title", names); //possível problema...
+      .in("id", testCampaignIds);
+
+    testCampaignIds.length = 0;
 
     if (error) {
       throw new Error(`Falha ao limpar campanhas do teste: ${error.message}`);
@@ -92,6 +94,10 @@ describe("Campaign - Testes de integração", () => {
     const data = makeCampaignData();
 
     const response = await request(app).post("/campaigns").send(data);
+
+    if (typeof response.body.id === "string") {
+      testCampaignIds.push(response.body.id);
+    }
 
     expect(response.status).toBe(201);
     expect(response.body.id).toEqual(expect.any(String));

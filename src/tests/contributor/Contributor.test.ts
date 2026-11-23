@@ -13,6 +13,7 @@ describe("Contributor - Testes unitários", () => {
     expect(contributor.getName()).toBe("Contribuidor de Teste");
     expect(contributor.getDescription()).toBe("Descrição do contribuidor de teste");
     expect(contributor.getIcon()).toBe("👤");
+    expect(contributor.getDonationAmount()).toBe(0);
     expect(contributor.isActive()).toBe(true);
     expect(contributor.isDeleted()).toBe(false);
   });
@@ -41,10 +42,21 @@ describe("Contributor - Testes unitários", () => {
   });
 
   it("não deve permitir descrição com mais de 255 caracteres", () => {
-    const contributor = new Contributor("Contribuidor", "a".repeat(256), "👤");
+    const contributor = new Contributor("Contribuidor", "Descrição", "👤");
 
     expect(() => contributor.changeDescription("a".repeat(256))).toThrow(
       "A descrição deve ter no máximo 255 caracteres.",
+    );
+  });
+
+  it("não deve permitir valor de contribuição inválido", () => {
+    const contributor = new Contributor("Contribuidor");
+
+    expect(() => contributor.changeDonationAmount(-1)).toThrow(
+      "O valor da contribuição deve ser válido e possuir no máximo duas casas decimais.",
+    );
+    expect(() => contributor.changeDonationAmount(1.001)).toThrow(
+      "O valor da contribuição deve ser válido e possuir no máximo duas casas decimais.",
     );
   });
 
@@ -94,6 +106,7 @@ describe("Contributor - Testes unitários", () => {
     expect(contributor.getName()).toBe("Contribuidor Restaurado");
     expect(contributor.getDescription()).toBe("Descrição restaurada");
     expect(contributor.getIcon()).toBe("👤");
+    expect(contributor.getDonationAmount()).toBe(0);
     expect(contributor.isActive()).toBe(false);
     expect(contributor.getCreatedAt()).toBe(createdAt);
   });
