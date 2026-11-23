@@ -4,6 +4,7 @@ import swaggerSpec from "./config/swagger.js";
 import CampaignRoutes from "./routes/CampaignRoutes.js";
 import OrganizerRoutes from "./routes/OrganizerRoutes.js";
 import ContributorRoutes from "./routes/ContributorRoutes.js";
+import CampaignContributorRoutes from "./routes/CampaignContributorRoutes.js";
 
 
 const app = express();
@@ -22,5 +23,6 @@ app.use(
 app.use("/campaigns", CampaignRoutes);
 app.use("/organizers", OrganizerRoutes);
 app.use("/contributors", ContributorRoutes);
+app.use("/campaign-contributors", CampaignContributorRoutes);
 
 export default app;
