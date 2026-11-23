@@ -158,7 +158,7 @@ async function update(req: Request<{ id: string }>, res: Response) {
   }
 }
 
-async function remove(req: Request<{ id: string }>, res: Response) {
+async function deactivate(req: Request<{ id: string }>, res: Response) {
   const { id } = req.params;
 
   if (!id) {
@@ -168,13 +168,13 @@ async function remove(req: Request<{ id: string }>, res: Response) {
   }
 
   try {
-    await CampaignRepository.remove(id);
+    await CampaignRepository.deactivate(id);
 
     res.status(200).json({
-      message: "Campanha removida com sucesso!",
+      message: "Campanha desativada com sucesso!",
     });
   } catch (error) {
-    console.log("Erro ao remover campanha: ", error);
+    console.log("Erro ao desativar campanha: ", error);
 
     if (error instanceof NotFoundError) {
       res.status(404).json({
@@ -183,7 +183,7 @@ async function remove(req: Request<{ id: string }>, res: Response) {
     }
 
     return res.status(500).json({
-      message: "Erro interno ao remover campanha.",
+      message: "Erro interno ao desativar campanha.",
     });
   }
 }
@@ -194,5 +194,5 @@ export default {
   getById,
   create,
   update,
-  remove,
+  deactivate
 };

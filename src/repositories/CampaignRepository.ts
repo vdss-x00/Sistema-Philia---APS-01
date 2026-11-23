@@ -93,10 +93,10 @@ async function update(campaign: Campaign) {
   return data;
 }
 
-async function remove(id: string) {
+async function deactivate(id: string) {
   const { data, error } = await supabase
     .from("campaigns")
-    .delete()
+    .update({ active: false, is_deleted: true })
     .eq("id", id)
     .select()
     .maybeSingle();
@@ -130,6 +130,6 @@ export default {
   findById,
   create,
   update,
-  remove,
+  deactivate,
   findByKeyword,
 };

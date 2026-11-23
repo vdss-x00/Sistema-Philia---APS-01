@@ -125,12 +125,12 @@ router.put("/:id", CampaignController.update);
 
 /**
  * @openapi
- * /campaigns/{id}:
- *   delete:
+ * /campaigns/{id}/disable:
+ *   patch:
  *     tags:
  *       - Campaigns
- *     summary: Remover uma campanha
- *     description: Remove uma campanha pelo seu identificador.
+ *     summary: Desativar uma campanha
+ *     description: Desativa uma campanha pelo seu identificador.
  *     parameters:
  *       - in: path
  *         name: id
@@ -140,7 +140,7 @@ router.put("/:id", CampaignController.update);
  *         description: ID da campanha.
  *     responses:
  *       200:
- *         description: Campanha removida com sucesso.
+ *         description: Campanha desativada com sucesso.
  *         content:
  *           application/json:
  *             schema:
@@ -148,8 +148,8 @@ router.put("/:id", CampaignController.update);
  *       404:
  *         description: Campanha não encontrada.
  *       500:
- *         description: Erro interno ao remover campanha.
+ *         description: Erro interno ao desativar campanha.
  */
-router.delete("/:id", CampaignController.remove);
+router.patch("/:id/disable", CampaignController.deactivate);
 
 export default router;
