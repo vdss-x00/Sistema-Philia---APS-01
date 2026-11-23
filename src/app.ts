@@ -1,19 +1,26 @@
 import express from "express";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./config/swagger.js";
 import CampaignRoutes from "./routes/CampaignRoutes.js";
 import OrganizerRoutes from "./routes/OrganizerRoutes.js";
+import ContributorRoutes from "./routes/ContributorRoutes.js";
 
 
 const app = express();
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "Philia Fundraising System API",
-    version: "1.0.0",
-  });
+    res.redirect("/api-docs");
 });
+
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec),
+);
 
 app.use("/campaigns", CampaignRoutes);
 app.use("/organizers", OrganizerRoutes);
+app.use("/contributors", ContributorRoutes);
 
 export default app;

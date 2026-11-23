@@ -27,7 +27,6 @@ create table campaigns (
 
 create table contributors (
     id uuid primary key default gen_random_uuid(),
-    campaign_id uuid not null,
     name varchar(100) not null,
     description varchar(255),
     icon varchar(10),
