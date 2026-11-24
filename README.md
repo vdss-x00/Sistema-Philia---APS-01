@@ -182,20 +182,20 @@ Há quatro tabelas usadas no projeto:
 | Coluna | Descrição |
 | ------ | --------- |
 | id     | Chave primária gerada aleatoriamente <br />e automaticamente pela função randomUUID(). |
-| name   | Nome do organizador. |
-| description | Descrição do organizador. |
+| name   | Nome do contribuidor. |
+| description | Descrição do contribuidor. |
 | donation_amount | Atributo numérico que simula o valor de uma doação <br /> de um contribuidor. |
 | icon | Atributo VARCHAR que simula imagem de perfil do contribuidor. |
-| active | Atributo booleano que indica se o organizador <br /> está ativo ou não. |
+| active | Atributo booleano que indica se o contribuidor <br /> está ativo ou não. |
 | created_at | Atributo `timestamp` gerado automaticamente pelo Supabase. |
 | is_deleted | Atributo booleano que indica se o contribuidor <br /> foi deletado por meio de soft delete ou não. |
 
 ### campaign_contributors
 | Coluna | Descrição |
 | ------ | --------- |
-| campaign_id     | Chave primária gerada aleatoriamente <br />e automaticamente pela função randomUUID(). |
-| contributor_id   | Nome do organizador. |
-| donation_amount | Descrição do organizador. |
+| campaign_id     | Chave estrangeira que referencia a tabela `campaigns` |
+| contributor_id   | Chave estrangeira que referencia a tabela `contributors` |
+| donation_amount | Valor numárico que referencia a quantia da doação. |
 | created_at | Atributo `timestamp` gerado automaticamente pelo Supabase. |
 
 [Voltar ao Índice](#índice)
@@ -247,7 +247,7 @@ Exemplo:
 {
     "name": "Jéssica",
     "description": "Organizadora de eventos de caridade para crianças com câncer.",
-    "active": true
+    "icon": "❤️"
 }
 ``` 
 
@@ -259,8 +259,9 @@ Deve resultar em algo assim:
     "description": "Organizadora de eventos de caridade para crianças com câncer.",
     "icon": null,
     "active": true,
-    "created_at": "2026-09-29T02:42:40.344568+00:00"
-}
+    "created_at": "2026-09-29T02:42:40.344568+00:00",
+    "is_deleted": false
+  },
 ```
 >Os campos que não foram incluídos no input são gerados automaticamente pelo Supabase.
 
@@ -286,7 +287,8 @@ Resultado:
     "goal_amount": 6500,
     "active": false,
     "created_at": "2026-09-29T02:59:16.820711+00:00",
-    "updated_at": "2026-09-29T02:59:16.820711+00:00"
+    "updated_at": "2026-09-29T02:59:16.820711+00:00",
+    "is_deleted": false
 }
 ```
 Agora, para mudar um ou mais atributos, efetue uma operação PUT no endpoint `/campaigns/:id`, trocando o ":id" pelo id gerado pelo Supabase:
@@ -308,11 +310,28 @@ Resultado:
     "goal_amount": 6500,
     "active": true,
     "created_at": "2026-09-29T02:59:16.820711+00:00",
-    "updated_at": "2026-09-29T02:59:16.820711+00:00"
+    "updated_at": "2026-09-29T02:59:16.820711+00:00",
+    "is_deleted": false
 }
 ```
 
-Para completar o ciclo de CRUD, efetue uma operação DELETE no endpoint `/campaigns/:id` para remover a campanha que você registrou.
+Para completar o ciclo de CRUD, efetue uma operação PATCH no endpoint `/campaigns/:id/disable` para desativar a campanha que você registrou.
+
+Exemplo:
+```text
+{
+    "id": "a874b695-eb26-40fd-b4ea-4b0790c52dd2",
+    "organizer_id": "00315c15-b3c0-4317-a2b8-54d67226156b",
+    "title": "Ajude as crianças do nosso hospital!",
+    "description": "Nos ajude a conseguir medicamentos!",
+    "image": null,
+    "goal_amount": 6500,
+    "active": false,
+    "created_at": "2026-09-29T02:59:16.820711+00:00",
+    "updated_at": "2026-09-29T02:59:16.820711+00:00",
+    "is_deleted": true
+}
+```
 
 
 [Voltar ao Índice](#índice)
@@ -357,6 +376,7 @@ npm run test:coverage
 ```
 
 Ao rodar `npm run test:coverage`, se todos os testes forem bem-sucedidos, será gerado um relatório de cobertura de código dos arquivos de teste
+
 Exemplo de relatório de cobertura de código:
 ```text
 ------------------------|---------|----------|---------|---------|-------------------
